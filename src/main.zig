@@ -2,11 +2,11 @@ const std = @import("std");
 const Client = @import("client.zig").Client;
 
 pub fn main() !void {
-    var buffer: [2 * 1024]u8 = undefined;
-    var fba = std.heap.FixedBufferAllocator.init(&buffer);
-    const allocator = fba.allocator();
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    const alloc = gpa.allocator();
+    defer _ = gpa.deinit();
 
-    var client = try Client.init(allocator, .{
+    var client = try Client.init(alloc, .{
         .address = "192.168.1.230",
         .port = 9000,
         .client_name = "test_client",
@@ -20,8 +20,6 @@ pub fn main() !void {
         client.disconnect();
         client.deinit();
     }
-
-    std.debug.print("Current buffer state: {x:0>2}\n\n", .{buffer});
 
     while (true) try client.blockingReceive();
 }
