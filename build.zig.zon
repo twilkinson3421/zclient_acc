@@ -1,0 +1,21 @@
+.{
+    .name = "zclient_acc",
+    .version = "0.0.0",
+
+    .dependencies = .{
+        .network = .{
+            .url = "https://github.com/ikskuh/zig-network/archive/805ce63eec48373ec497542f18f19d7c484b9b2e.tar.gz",
+            .hash = "122007f014c736cee735f1fe71660e39aa9f8c9351deab2e35c4dd9ab69d37d8db46",
+        },
+        .teilchen = .{
+            .url = "https://github.com/twilkinson3421/teilchen/archive/6178e486526e9faec2377896bf14ad1b5984d775.tar.gz",
+            .hash = "12204efb563e342618ec4efc951de783dffaaa0e94cfdf79d7869b5ee4d2019d9048",
+        },
+    },
+
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "src",
+    },
+}
