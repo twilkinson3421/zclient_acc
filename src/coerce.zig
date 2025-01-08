@@ -1,5 +1,5 @@
 const std = @import("std");
-const binutils = @import("binutils/root.zig");
+const binutils = @import("binutils");
 
 pub fn connect(
     allocator: std.mem.Allocator,

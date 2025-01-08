@@ -11,8 +11,14 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
 
-    exe.root_module.addImport("network", b.dependency("network", .{}).module("network"));
-    exe.root_module.addImport("teilchen", b.dependency("teilchen", .{}).module("teilchen"));
+    const network = b.dependency("network", .{});
+    exe.root_module.addImport("network", network.module("network"));
+
+    const zutil = b.dependency("zutil", .{});
+    exe.root_module.addImport("zutil", zutil.module("zutil"));
+
+    const zbinutils = b.dependency("zbinutils", .{});
+    exe.root_module.addImport("binutils", zbinutils.module("binutils"));
 
     b.installArtifact(exe);
 

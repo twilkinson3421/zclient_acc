@@ -2,7 +2,7 @@ const std = @import("std");
 const network = @import("network");
 const coerce = @import("coerce.zig");
 const parse = @import("parse.zig");
-const binutils = @import("binutils/root.zig");
+const binutils = @import("binutils");
 const enums = @import("enums.zig");
 const msg = @import("msg.zig");
 

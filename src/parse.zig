@@ -1,8 +1,8 @@
 const std = @import("std");
-const binutils = @import("binutils/root.zig");
+const binutils = @import("binutils");
 const msg = @import("msg.zig");
 const enums = @import("enums.zig");
-const util = @import("teilchen");
+const util = @import("zutil");
 
 pub fn parseLap(reader: *binutils.Reader) !msg.Lap {
     var lap = msg.Lap{};
