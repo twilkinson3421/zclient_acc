@@ -2,7 +2,7 @@ const std = @import("std");
 const Client = @import("client.zig").Client;
 
 pub fn main() !void {
-    var buffer: [2000]u8 = undefined;
+    var buffer: [2 * 1024]u8 = undefined;
     var fba = std.heap.FixedBufferAllocator.init(&buffer);
     const allocator = fba.allocator();
 
