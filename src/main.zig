@@ -1,12 +1,12 @@
 const std = @import("std");
-const Client = @import("client.zig").Client;
+const acc = @import("client.zig");
 
 pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
     const alloc = gpa.allocator();
     defer _ = gpa.deinit();
 
-    var client = try Client.init(alloc, .{
+    var client = try acc.Client.init(alloc, .{
         .address = "192.168.1.230",
         .port = 9000,
         .client_name = "test_client",

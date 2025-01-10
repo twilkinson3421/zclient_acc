@@ -1,41 +1,37 @@
 const std = @import("std");
 
 pub fn build(b: *std.Build) void {
-    const target = b.standardTargetOptions(.{});
-    const optimize = b.standardOptimizeOption(.{});
+    // const target = b.standardTargetOptions(.{});
+    // const optimize = b.standardOptimizeOption(.{});
 
-    const exe = b.addExecutable(.{
-        .name = "zclient_acc",
-        .root_source_file = b.path("src/main.zig"),
-        .target = target,
-        .optimize = optimize,
-    });
+    // const exe = b.addExecutable(.{
+    //     .name = "zclient_acc",
+    //     .root_source_file = b.path("src/main.zig"),
+    //     .target = target,
+    //     .optimize = optimize,
+    // });
 
     const network = b.dependency("network", .{});
-    exe.root_module.addImport("network", network.module("network"));
-
     const zutil = b.dependency("zutil", .{});
-    exe.root_module.addImport("zutil", zutil.module("zutil"));
-
     const zbinutils = b.dependency("zbinutils", .{});
-    exe.root_module.addImport("binutils", zbinutils.module("binutils"));
 
-    b.installArtifact(exe);
+    // exe.root_module.addImport("network", network.module("network"));
+    // exe.root_module.addImport("zutil", zutil.module("zutil"));
+    // exe.root_module.addImport("binutils", zbinutils.module("binutils"));
 
-    const run_cmd = b.addRunArtifact(exe);
-    run_cmd.step.dependOn(b.getInstallStep());
-    if (b.args) |args| run_cmd.addArgs(args);
+    // b.installArtifact(exe);
 
-    const run_step = b.step("run", "Run the app");
-    run_step.dependOn(&run_cmd.step);
+    // const run_cmd = b.addRunArtifact(exe);
+    // run_cmd.step.dependOn(b.getInstallStep());
+    // if (b.args) |args| run_cmd.addArgs(args);
 
-    const exe_unit_tests = b.addTest(.{
-        .root_source_file = b.path("src/main.zig"),
-        .target = target,
-        .optimize = optimize,
-    });
+    // const run_step = b.step("run", "Run the app");
+    // run_step.dependOn(&run_cmd.step);
 
-    const run_exe_unit_tests = b.addRunArtifact(exe_unit_tests);
-    const test_step = b.step("test", "Run unit tests");
-    test_step.dependOn(&run_exe_unit_tests.step);
+    // Lib; all above can be ignored if only using this lib
+
+    const lib = b.addModule("client", .{ .root_source_file = b.path("src/client.zig") });
+    lib.addImport("network", network.module("network"));
+    lib.addImport("zutil", zutil.module("zutil"));
+    lib.addImport("binutils", zbinutils.module("binutils"));
 }
