@@ -14,6 +14,7 @@ pub fn main() !void {
         .command_password = "",
         .update_ms = 300,
     });
+
     try client.connect();
 
     defer {
@@ -21,5 +22,11 @@ pub fn main() !void {
         client.deinit();
     }
 
-    while (true) try client.blockingReceive();
+    try client.receive();
+
+    std.time.sleep(std.time.ns_per_s * 1);
+
+    std.debug.print("Receiving is happening in a separate thread\n", .{});
+
+    std.time.sleep(std.time.ns_per_s * 3);
 }

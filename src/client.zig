@@ -15,6 +15,8 @@ pub const Client = struct {
     connection_id: ?i32 = null,
     car_map: std.AutoHashMap(isize, msg.Car),
     pointers: Pointers,
+    thread: std.Thread = undefined,
+    should_stop: bool = false,
 
     pub const Params = struct {
         address: []const u8 = "localhost",
@@ -59,7 +61,7 @@ pub const Client = struct {
     }
 
     pub fn deinit(self: *@This()) void {
-        if (self.connected) self.disconnect();
+        self.disconnect();
         self.socket.close();
         network.deinit();
         self.car_map.deinit();
@@ -95,14 +97,27 @@ pub const Client = struct {
     pub fn disconnect(self: *@This()) void {
         if (!self.connected) return;
         self.send(coerce.disconnect()) catch {};
+        self.stopReceive();
         self.connected = false;
-        std.debug.print("Connection terminated\n", .{});
     }
 
-    pub fn blockingReceive(self: *@This()) !void {
+    pub fn receive(self: *@This()) !void {
+        self.thread = try std.Thread.spawn(.{}, receiveThread, .{self});
+    }
+
+    pub fn stopReceive(self: *@This()) void {
+        self.should_stop = true;
+        self.thread.join();
+    }
+
+    pub fn receiveThread(self: *@This()) !void {
+        while (!self.should_stop) try self.blockingReceive();
+    }
+
+    fn blockingReceive(self: *@This()) !void {
         var buf: [1024]u8 = undefined;
-        _ = try self.socket.reader().readAll(&buf);
-        var reader = binutils.Reader{ .buffer = &buf, .endian = .little };
+        const len = try self.socket.receive(&buf);
+        var reader = binutils.Reader{ .buffer = buf[0..len], .endian = .little };
         const msg_type = try std.meta.intToEnum(enums.MessageType, try reader.read(u8));
         switch (msg_type) {
             .registration_result => {
